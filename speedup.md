@@ -279,3 +279,28 @@ define('DISALLOW_FILE_EDIT', true); # disable edit theme and plugin from wp-admi
 define('FS_CHMOD_DIR',0755);
 define('FS_CHMOD_FILE',0644);
 ````
+
+## WC EMAIL TEMPLATE TRIGGER CUSTOM ##
+````
+$mailer = WC()->mailer();
+		
+// Set up email data
+$subject = __('Sample has been ordered - '. $order_id, 'theme_name'); // Change the subject here
+// $customer_email = $order->get_billing_email();
+$email_heading_message = "A sample has been ordered.";
+
+// Get the email template content
+$email_body = wc_get_template_html(
+	'emails/admin-new-order.php', // WooCommerce email template file
+	array(
+		'order'         => $order,
+		'email_heading' => $email_heading_message,
+		'sent_to_admin' => false,
+		'plain_text'    => false,
+		'email'         => $mailer
+	)
+);
+
+// Send the email through WordPress
+$mailer->send($recipient, $subject, $email_body);
+````
